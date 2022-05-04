@@ -1,0 +1,27 @@
+{
+  "name": "pgr6301-exam-christofferthidesen",
+  "version": "1.0.0",
+  "description": "[Heroku](link til heroku)\r [Test rapport](link til testrapport)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kristiania-pg6301-2022/pgr6301-exam-ChristofferThidesen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kristiania-pg6301-2022/pgr6301-exam-ChristofferThidesen/issues"
+  },
+  "homepage": "https://github.com/kristiania-pg6301-2022/pgr6301-exam-ChristofferThidesen#readme",
+  "devDependencies": {
+    "parcel": "^2.5.0"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
+}
