@@ -11,9 +11,9 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const articles = [
+const ARTICLES = [
   {
     title: "News 1",
     article:
@@ -50,14 +50,61 @@ function FrontPage() {
   );
 }
 
-function Articles() {
+// function ListArticles({ articleApi }) {
+//   const [articles, setArticles] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const api = articleApi + articles;
+
+//   useEffect(function () {
+//     async function fetchData() {
+//       try {
+//         const response = await fetch(api);
+//         console.log(api);
+//         if (response.ok) {
+//           const json = await response.json();
+
+//           setArticles(json);
+//         } else {
+//           setError("An error occured");
+//         }
+//       } catch (err) {
+//         setError(error.toString());
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+//     fetchData();
+//   }, []);
+
+//   if (loading) {
+//     return <div className="loading">loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div>An error occured: {error}</div>;
+//   }
+
+function ListArticles({ articleApi }) {
+  const [articles, setArticles] = useState();
+
+  useEffect(async () => {
+    setArticles(undefined);
+    setArticles(await articleApi.listArticels());
+  }, []);
+
+  if (!articles) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
+      <h1>Articles</h1>
       {articles.map((m) => (
         <div key={m.title}>
           {" "}
           <Card style={{ width: "18rem" }}>
-            <h1>Articles</h1>
             {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
             <Card.Body>
               <Card.Title>
@@ -77,17 +124,16 @@ function Articles() {
     </>
   );
 }
-
-function AddArticle() {
+function AddArticle({ articleApi }) {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [article, setArticle] = useState("");
 
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    articles.push({ title, date, article });
+    await articleApi.onAddArticle({ title, date, article });
     navigate("/");
   }
 
@@ -116,12 +162,16 @@ function AddArticle() {
         </label>
       </div>
       <button>Submit</button>
-      <pre>{JSON.stringify({ title, date, article })}</pre>
     </form>
   );
 }
 
 function Application() {
+  const articleApi = {
+    onAddArticle: async (m) => ARTICLES.push(m),
+    listArticels: async () => ARTICLES,
+  };
+
   return (
     <>
       <BrowserRouter>
@@ -129,8 +179,14 @@ function Application() {
           <Container>
             <Routes>
               <Route path="/" element={<FrontPage />} />
-              <Route path="/articles/new" element={<AddArticle />} />
-              <Route path="/articles" element={<Articles />} />
+              <Route
+                path="/articles/new"
+                element={<AddArticle articleApi={articleApi} />}
+              />
+              <Route
+                path="/articles"
+                element={<ListArticles articleApi={articleApi} />}
+              />
             </Routes>
           </Container>
         </Navbar>

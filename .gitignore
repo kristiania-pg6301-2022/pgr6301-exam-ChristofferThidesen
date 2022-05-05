@@ -2,3 +2,4 @@ node_modules/
 .parcel-chace/
 dist/
 .cache/
+.parcel-cache/data.mdb
