@@ -13,9 +13,9 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 
-const ARTICLES = [
+const articles = [
   {
-    title: "News 1",
+    title: "News 1 ",
     article:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     date: "05 / 04 / 2022",
@@ -36,79 +36,69 @@ const ARTICLES = [
 
 function FrontPage() {
   return (
+    <>
+      <Nav />
+      <h1>PGR6301 EXAM</h1>
+    </>
+  );
+}
+
+function Nav() {
+  return (
     <div>
       <ul>
-        <li>
-          <Link to="/articles"> Articles</Link>
-        </li>
-
-        <li>
-          <Link to="/articles/new">New Articles</Link>
-        </li>
+        <Link to="/"> Home </Link>
+        <Link to="/articles"> |Articles </Link>
+        <Link to="/articles/new">|New Articles</Link>
       </ul>
     </div>
   );
 }
 
-// function ListArticles({ articleApi }) {
-//   const [articles, setArticles] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   const api = articleApi + articles;
-
-//   useEffect(function () {
-//     async function fetchData() {
-//       try {
-//         const response = await fetch(api);
-//         console.log(api);
-//         if (response.ok) {
-//           const json = await response.json();
-
-//           setArticles(json);
-//         } else {
-//           setError("An error occured");
-//         }
-//       } catch (err) {
-//         setError(error.toString());
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-//     fetchData();
-//   }, []);
-
-//   if (loading) {
-//     return <div className="loading">loading...</div>;
-//   }
-
-//   if (error) {
-//     return <div>An error occured: {error}</div>;
-//   }
-
 function ListArticles({ articleApi }) {
-  const [articles, setArticles] = useState();
+  const [article, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(async () => {
-    setArticles(undefined);
-    setArticles(await articleApi.listArticels());
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await articleApi();
+        if (response.ok) {
+          const json = await response.json();
+          setArticles(await article.listArticels)(json);
+        } else {
+          setError("An error occured");
+        }
+      } catch (err) {
+        setError(error?.toString());
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
-  if (!articles) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return <div className="loading"> Loading... </div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
     <>
+      <Nav />
       <h1>Articles</h1>
       {articles.map((m) => (
         <div key={m.title}>
           {" "}
           <Card style={{ width: "18rem" }}>
             {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-            <Card.Body>
+            <Card.Body className="card">
               <Card.Title>
-                <>{m.title}</>
+                <h1>{m.title}</h1>
               </Card.Title>
               <Card.Text>
                 <>{m.article}</>
@@ -134,11 +124,13 @@ function AddArticle({ articleApi }) {
   async function handleSubmit(e) {
     e.preventDefault();
     await articleApi.onAddArticle({ title, date, article });
-    navigate("/");
+    navigate("/articles");
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <Nav />
+
       <h1>Add Articles</h1>
       <div>
         <label>
@@ -168,8 +160,11 @@ function AddArticle({ articleApi }) {
 
 function Application() {
   const articleApi = {
-    onAddArticle: async (m) => ARTICLES.push(m),
-    listArticels: async () => ARTICLES,
+    onAddArticle: async (m) => articles.push(m),
+    listArticels: async () => {
+      const res = await fetch("/api/articles");
+      return res.json();
+    },
   };
 
   return (
