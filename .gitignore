@@ -1,0 +1,16 @@
+node_modules/
+.parcel-chace/
+dist/
+.cache/
+.parcel-cache/data.mdb
+.parcel-cache/0315d36a27db4833.txt
+.parcel-cache/0d2ab2907ad82783
+.parcel-cache/80f629cd67b6f4d2
+.parcel-cache/a65c4486eb04c3b4
+.parcel-cache/ab40446262ae94ed
+.parcel-cache/c3da2036039a4684
+.parcel-cache/cb0cf67ef5c33fde
+.parcel-cache/d7957208505deed6
+.parcel-cache/data.mdb
+.parcel-cache/e32116cab0c52369
+.parcel-cache/lock.mdb
